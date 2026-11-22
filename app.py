@@ -8,7 +8,7 @@ st.title('Análisis Interactivo de Viviendas en California')
 st.write('Datos del censo de 1990 de California, a nivel de grupo de bloques.')
 st.markdown('---')
 
-# ===== FASE 1: Carga y Preparación de Datos =====
+# 1 - Carga y preparación de los datos
 st.header('1. Carga y Preparación de Datos')
 
 # Cargar el dataset
@@ -17,7 +17,7 @@ datos = fetch_california_housing()
 # DataFrame con las características y sus nombres
 df_california = pd.DataFrame(datos.data, columns=datos.feature_names)
 
-# Agregar la variable objetivo como una columna más
+# Agregar la variable objetivo
 df_california['MedHouseVal'] = datos.target
 
 # Verificar valores faltantes
@@ -39,13 +39,13 @@ st.write(df_california.dtypes.astype(str))
 
 st.markdown('---')
 
-# ===== FASE 2: Análisis Descriptivo Interactivo =====
+# 2- Análisis descriptivo interactivo
 
-# Barra lateral: título y descripción
+# Agregar una barra lateral, título y descripción
 st.sidebar.markdown('## Filtros')
 st.sidebar.markdown('Elegí qué viviendas analizar. Todo se actualiza automáticamente.')
 
-# Filtro 1: edad de la vivienda (slider de rango, del mínimo al máximo)
+# filtro 1: edad de la vivienda (slider de rango)
 edad_min = int(df_california['HouseAge'].min())
 edad_max = int(df_california['HouseAge'].max())
 
@@ -55,7 +55,7 @@ rango_edad = st.sidebar.slider('Edad mediana de la casa (HouseAge)',
                                value=(edad_min, edad_max),
                                step=1)
 
-# Filtro 2: latitud mínima
+# filtro 2: latitud mínima
 latitud_minima = st.sidebar.number_input('Latitud mínima (Latitude)',
                                          min_value=float(df_california['Latitude'].min()),
                                          max_value=float(df_california['Latitude'].max()),
@@ -86,10 +86,10 @@ else:
     st.info('MedHouseVal está en cientos de miles de dólares (1.00 = USD 100.000).')
     st.markdown('---')
 
-    # ===== FASE 3: Visualización Dinámica =====
+    # 3 - visualización dinámica
     st.header('3. Visualizaciones')
 
-    # Histograma con Matplotlib
+    # Histograma
     st.subheader('Distribución del valor de la vivienda')
 
     fig, ax = plt.subplots()
@@ -102,7 +102,7 @@ else:
     ax.legend()
     st.pyplot(fig)
 
-    # Gráfico de dispersión con Plotly
+    # Gráfico de dispersión
     st.subheader('Relación entre ingreso y valor de la vivienda')
 
     fig_scatter = px.scatter(df_filtrado,
@@ -117,6 +117,6 @@ else:
     correlacion = df_filtrado['MedInc'].corr(df_filtrado['MedHouseVal'])
     st.write(f'Correlación entre ingreso y valor de la vivienda: **{correlacion:.2f}**')
 
-    # Mapa geográfico (opcional)
+    # Mapa geográfico
     st.subheader('Mapa de las viviendas filtradas')
     st.map(df_filtrado, latitude='Latitude', longitude='Longitude')
